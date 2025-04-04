@@ -19,7 +19,7 @@ url="https://api.github.com/repos/k8s-school/gha-experiment/dispatches"
 branch=$(git -C $DIR symbolic-ref -q --short HEAD || git describe --tags --exact-match)
 
 
-payload="{\"build\": true,\"e2e\": true, \"branch\": $branch}"
+payload="{\"build\": true,\"e2e\": true, \"branch\": \"$branch\"}"
 echo "Payload: $payload"
 
 if [ -z "$token" ]; then
