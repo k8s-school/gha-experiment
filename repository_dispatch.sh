@@ -12,11 +12,14 @@ DIR=$(cd "$(dirname "$0")"; pwd -P)
 
 token="${TOKEN:-}"
 
-event_type="e2e-noscience"
+event_type="e2e"
 
 url="https://api.github.com/repos/k8s-school/gha-experiment/dispatches"
 
-payload="{\"build\": $build,\"e2e\": $e2e,\"push\": $push, \"cluster\": \"$cluster\", \"image\": \"$CIUX_IMAGE_URL\"}"
+branch=$(git -C $DIR symbolic-ref -q --short HEAD || git describe --tags --exact-match)
+
+
+payload="{\"build\": true,\"e2e\": true, \"branch\": $branch}"
 echo "Payload: $payload"
 
 if [ -z "$token" ]; then
@@ -30,3 +33,4 @@ else
   -H "X-GitHub-Api-Version: 2022-11-28" \
   $url \
   -d "{\"event_type\":\"$event_type\",\"client_payload\":$payload}" || echo "ERROR Failed to dispatch event" >&2
+fi

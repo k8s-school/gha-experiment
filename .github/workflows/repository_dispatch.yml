@@ -2,15 +2,15 @@ name: "e2e: noscience, self-hosted"
 
 on:
   repository_dispatch:
-    types: [e2e-noscience]
+    types: [e2e]
 
 jobs:
-  e2e-noscience:
+  e2e:
     runs-on: ubuntu-latest
     steps:
     - name: build
       run: |
-        image="${{ github.event.client_payload.image }}"
+        echo "Branch received: ${{ github.event.client_payload.branch }}"
         if [ "${{ github.event.client_payload.build }}" == "true" ]; then
           echo "build success for image $image"
         else
@@ -19,7 +19,6 @@ jobs:
         fi
     - name: e2e
       run: |
-        cluster="${{ github.event.client_payload.cluster }}"
         if [ "${{ github.event.client_payload.e2e }}" == "true" ]; then
 
           echo "Succeed to run e2e tests on cluster $cluster"
@@ -27,17 +26,3 @@ jobs:
           echo "Failed to run e2e tests on cluster $cluster"
           exit 1
         fi
-    - name: push
-      run: |
-        image="${{ github.event.client_payload.image }}"
-        if [ "${{ github.event.client_payload.push }}" == "true" ]; then
-          echo "Succeed in pushing image $image"
-        else
-          echo "Failed to push image $image"
-          exit 1
-        fi
-    - uses: act10ns/slack@v1
-      with:
-        webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
-        status: ${{ job.status }}
-      if: always()
