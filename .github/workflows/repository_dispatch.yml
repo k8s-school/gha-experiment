@@ -8,18 +8,6 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     steps:
-    - name: get_branch
-      run: |
-        BRANCH="${{ github.event.client_payload.branch }}"
-        echo "Branche reçue : $BRANCH"
-
-        # Vérifier si la branche existe sur le dépôt
-        if git ls-remote --heads origin $BRANCH | grep $BRANCH; then
-          echo "Branche valide : $BRANCH"
-        else
-          echo "Erreur : La branche n'existe pas !" >&2
-          exit 1
-        fi
     - name: checkout_branch
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
