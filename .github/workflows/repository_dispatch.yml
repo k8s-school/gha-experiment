@@ -8,7 +8,7 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     steps:
-    - name: Get the branch name and check if it exists
+    - name: get_branch
       run: |
         BRANCH="${{ github.event.client_payload.branch }}"
         echo "Branche reçue : $BRANCH"
@@ -20,7 +20,9 @@ jobs:
           echo "Erreur : La branche n'existe pas !" >&2
           exit 1
         fi
-    - name: Checkout the branch
+    - name: checkout_branch
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       uses: actions/checkout@v4
       with:
         ref: ${{ github.event.client_payload.branch }}
